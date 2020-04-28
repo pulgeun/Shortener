@@ -53,12 +53,12 @@ public class ShortenerController {
 	@RequestMapping(value = "/shortener/exchange", method=RequestMethod.POST)
 	public @ResponseBody String getShortenUrl(@RequestParam String longUrl) throws Exception {
 		
-		LOGGER.info("longUrl : "+longUrl);
+		LOGGER.info("longUrl : " +  longUrl);
 		if (UrlValidator.checkUrl(longUrl)) {
 			
 			String shortUrl = urlDataService.getShortUrl(longUrl);
 			
-			LOGGER.info("shortUrl : "+shortUrl);
+			LOGGER.info("shortUrl : " +  shortUrl);
 			return shortUrl ;
 			
 		}
