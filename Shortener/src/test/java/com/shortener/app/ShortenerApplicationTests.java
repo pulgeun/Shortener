@@ -20,6 +20,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.rule.OutputCapture;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,17 +35,14 @@ import com.shortener.app.service.URLDataService;
 @RunWith(SpringRunner.class)
 @WebMvcTest(ShortenerController.class)
 @AutoConfigureMockMvc
+@ComponentScan("com.shortener.app.service")
 public class ShortenerApplicationTests {
-
-	@Rule
-    public OutputCapture outputCapture = new OutputCapture();
-
 
 	@Autowired
 	private MockMvc mockMvc;
 
 	
-	@MockBean 
+	@Autowired
 	URLDataService urlDataService;
 	 
 	@Before
@@ -72,6 +70,7 @@ public class ShortenerApplicationTests {
 
 		mockMvc.perform(get("/shortener/exchange")).andDo(print());
 	}
+	
 	
 	@Test
 	public void getShortenerUrlTest3() throws Exception {

@@ -1,9 +1,12 @@
 package com.shortener.app.controller;
 
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.URL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.shortener.app.service.URLDataService;
 import com.shortener.app.util.UrlValidator;
 
+@Validated
 @Controller
 public class ShortenerController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ShortenerController.class);
@@ -51,7 +55,7 @@ public class ShortenerController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/shortener/exchange", method=RequestMethod.POST)
-	public @ResponseBody String getShortenUrl(@RequestParam String longUrl) throws Exception {
+	public @ResponseBody @Length(min = 8, max = 8) String getShortenUrl(@URL @RequestParam String longUrl) throws Exception {
 		
 		LOGGER.info("longUrl : " +  longUrl);
 		if (UrlValidator.checkUrl(longUrl)) {
@@ -73,7 +77,7 @@ public class ShortenerController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/{shortUrl}", method=RequestMethod.GET)
-	public String redirectUrl(@PathVariable("shortUrl") String shortUrl) throws Exception {
+	public String redirectUrl(@Length(min = 8, max = 8) @PathVariable("shortUrl") String shortUrl) throws Exception {
 		
 		String longUrl = urlDataService.getLongUrl(shortUrl);
 		return "redirect:"+longUrl;
