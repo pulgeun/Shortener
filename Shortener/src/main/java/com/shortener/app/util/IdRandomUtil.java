@@ -10,9 +10,7 @@ public class  IdRandomUtil {
 	 * 8잘 영문(대소)+숫자의 랜덤 문자열 반환
 	 * @return
 	 */
-	public static String getShortUrl() {
-		
-	
+	public static String generate() {
 		String shortId = RandomStringUtils.randomAlphanumeric(SHORT_ID_LENGTH);
 		
 		return shortId;

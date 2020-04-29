@@ -1,9 +1,7 @@
 package com.shortener.app.service;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.BiFunction;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,10 +35,10 @@ public class URLDataService {
 	    
 		//키가 없는 경우 
 		UrlData urlData = longUrlKeys.computeIfAbsent(longUrl, url -> {
-			String shortUrl = IdRandomUtil.getShortUrl();
+			String shortUrl = IdRandomUtil.generate();
 			//생성된 shorturl 이 이미 다른곳에 할당된 경우 새로운 키를 얻음
 			while (shortUrlKeys.containsKey(shortUrl)) {
-				shortUrl = IdRandomUtil.getShortUrl();
+				shortUrl = IdRandomUtil.generate();
 			}
 			UrlData urlData1 = new UrlData(shortUrl, url);
 			shortUrlKeys.put(shortUrl, urlData1);
@@ -48,20 +46,6 @@ public class URLDataService {
 		});
 		
 		return urlData;
-		
-		/*
-		 * String shortUrl = (String)longUrlKeys.get(longUrl);
-		 * 
-		 * if (shortUrl == null) { // 중복된 short url인지 확인하여, 신규 short url이 나올때 까지 루핑
-		 * while (shortUrl == null || shortUrlKeys.get(shortUrl) != null) { shortUrl =
-		 * IdRandomUtil.getShortUrl(); } }
-		 * 
-		 * UrlData urlData = new UrlData(shortUrl, longUrl);
-		 * 
-		 * shortUrlKeys.put(shortUrl, urlData); longUrlKeys.put(longUrl, shortUrl);
-		 * 
-		 * return urlData;
-		 */
 	}
 
 	/**
@@ -70,24 +54,6 @@ public class URLDataService {
 	 * @return
 	 */
     public String getShortUrl(String longUrl) {
-//    	longUrlKeys.computeIfPresent(longUrl, new BiFunction<String, String, String>() {
-//
-//			@Override
-//			public String apply(String t, String u) {
-//				
-//				return null;
-//			}
-//    	});
-//    	
-//    	String shortUrl = (String)longUrlKeys.get(longUrl);
-//    	
-//    	if (shortUrl == null) {
-//    		UrlData urlData = addUrl(longUrl);
-//    		shortUrl = urlData.getShortUrl();
-//    		
-//    		LOGGER.info("hit count : " + urlData.getHitCount());
-//    	}
-//        return shortUrl;
     	UrlData urlData = addUrl(longUrl);
     	
     	LOGGER.info("hit count : " + urlData.getHitCount());
@@ -100,7 +66,7 @@ public class URLDataService {
      * @return
      * @throws Exception
      */
-    public String getLongUrl(String shortUrl) throws Exception {
+    public String getLongUrl(String shortUrl) {
     	UrlData urlData = shortUrlKeys.get(shortUrl);
     	
     	if (urlData != null) {
@@ -111,6 +77,7 @@ public class URLDataService {
 	    	LOGGER.info("hit count : " + urlData.getHitCount());
 	    	return longUrl;
     	}
-    	throw new Exception("Unkown short URL"); 
+
+    	throw new IllegalArgumentException("Unkown short URL"); 
     }
 }

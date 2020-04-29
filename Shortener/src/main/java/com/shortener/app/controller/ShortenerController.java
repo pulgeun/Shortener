@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.shortener.app.service.URLDataService;
-import com.shortener.app.util.UrlValidator;
 
 @Validated
 @Controller
@@ -58,15 +57,11 @@ public class ShortenerController {
 	public @ResponseBody @Length(min = 8, max = 8) String getShortenUrl(@URL @RequestParam String longUrl) throws Exception {
 		
 		LOGGER.info("longUrl : " +  longUrl);
-		if (UrlValidator.checkUrl(longUrl)) {
 			
-			String shortUrl = urlDataService.getShortUrl(longUrl);
-			
-			LOGGER.info("shortUrl : " +  shortUrl);
-			return shortUrl ;
-			
-		}
-		return "Unkown URL";
+		String shortUrl = urlDataService.getShortUrl(longUrl);
+		
+		LOGGER.info("shortUrl : " +  shortUrl);
+		return shortUrl ;
 	}
 	
 	
